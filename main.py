@@ -4,7 +4,7 @@ from telegram.ext import ApplicationBuilder
 
 from database.db import init_db
 from conversations.register_user import register_handler
-
+from conversations.add_overtime import overtime_handler
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
@@ -19,7 +19,7 @@ def main():
 
     # Conversations primero
     app.add_handler(register_handler)
-
+    app.add_handler(overtime_handler)
     app.run_polling()
 
 
