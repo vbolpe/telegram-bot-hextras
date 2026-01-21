@@ -55,7 +55,7 @@ async def ot_client(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 overtime_handler = ConversationHandler(
     entry_points=[
-        CallbackQueryHandler(start_overtime, pattern="ADD_OT")
+        CallbackQueryHandler(start_overtime, pattern="extra")
     ],
     states={
         OT_DATE: [MessageHandler(filters.TEXT, ot_date)],
