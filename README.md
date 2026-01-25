@@ -1,92 +1,52 @@
 ﻿# telegram-bot-hextras
 
-#  Diagrama de Flujo – Bot de Telegram (Dockerizado)
+# Diagrama de Flujo – Bot de Telegram (Dockerizado)
 
-##  Descripción general
+## Descripcion general
 
-Bot de Telegram ejecutándose dentro de un contenedor Docker.  
-Gestiona usuarios y registro de horas extras utilizando una base de datos (SQLite).
+Bot de Telegram ejecutado en Docker que gestiona usuarios y horas extras usando SQLite.
 
-### Funcionalidades:
-- `/start` → Verifica si el usuario existe y lo crea si no
-- `/help` → Muestra los comandos disponibles
-- `/newh` → Carga una nueva hora extra
-- `/csv` → Descarga horas extras de un mes
-- Cualquier otro texto → Redirige a `/start`
+### Comandos soportados
+- START → Registro / inicio
+- HELP → Lista de comandos
+- NEWH → Nueva hora extra
+- CSV → Descarga de horas extras
+- Texto libre → Redireccion a START
 
 ---
 
-## Flujo general del bot
+## Diagrama de flujo
 
 ```mermaid
 flowchart TD
-    A[Inicio] --> B[Mensaje recibido desde Telegram]
-    B --> C{¿Es un comando?}
+    A[Inicio] --> B[Mensaje recibido]
+    B --> C{Es comando}
 
-    C -- NO --> D[Redirigir a /start]
-    D --> E
+    C -- No --> D[Redirigir a START]
+    D --> E[Evaluar comando]
 
-    C -- SI --> E{Comando recibido}
+    C -- Si --> E{Tipo de comando}
 
-    E -->|/start| F{¿Usuario registrado?}
-    F -- NO --> G[Crear usuario en DB]
+    E -- START --> F{Usuario existe}
+    F -- No --> G[Crear usuario en DB]
     G --> H[Confirmar registro]
-    F -- SI --> I[Mostrar menú principal]
+    F -- Si --> I[Mostrar menu principal]
 
-    E -->|/help| J[Mostrar lista de comandos]
+    E -- HELP --> J[Mostrar comandos disponibles]
 
-    E -->|/newh| K{¿Usuario registrado?}
-    K -- SI --> L[Solicitar datos de hora extra]
-    L --> M[Guardar hora extra en DB]
+    E -- NEWH --> K{Usuario existe}
+    K -- Si --> L[Solicitar datos hora extra]
+    L --> M[Guardar hora en DB]
     M --> N[Confirmar carga]
 
-    E -->|/csv| O{¿Usuario registrado?}
-    O -- SI --> P[Solicitar mes]
+    E -- CSV --> O{Usuario existe}
+    O -- Si --> P[Solicitar mes]
     P --> Q[Buscar horas en DB]
-    Q --> R[Generar archivo CSV]
-    R --> S[Enviar archivo al usuario]
+    Q --> R[Generar CSV]
+    R --> S[Enviar archivo]
 
-    E -->|Otro texto| D
+    E -- OTRO --> D
 
-
-
-
-
- [Inicio]
-   |
-   v
-[Mensaje recibido desde Telegram]
-   |
-   v
-[¿Es un comando?]
-   |
-   +-- NO --------------------------+
-   |                                 |
-   v                                 v
-[Redirigir a /start]        [Identificar comando]
-                                   |
-        ------------------------------------------------
-        |            |            |           |       |
-       /start       /help        /newh        /csv   Otro
-        |            |            |           |       |
-        v            v            v           v       v
-[¿Usuario existe?] [Mostrar      [¿Usuario   [¿Usuario [Redirigir
-        |          comandos]     existe?]     existe?] a /start]
-   +----+----+                        |           |
-   |         |                        |           |
-  NO        SI                        SI          SI
-   |         |                        |           |
-[Crear   [Menú principal]     [Cargar nueva   [Pedir mes]
-usuario]                      hora extra]        |
-   |                                 |           |
-   v                                 v           v
-[Confirmar registro]         [Guardar en DB] [Buscar horas]
-                                   |           |
-                                   v           v
-                             [Confirmar OK] [Generar CSV]
-                                                   |
-                                                   v
-                                             [Enviar archivo]
 
 
 
