@@ -31,7 +31,7 @@ def main():
     app.add_handler(csv_handler)
     app.add_handler(
         MessageHandler(
-            filter.TEXT & ~filter.COMMAND,
+            filters.TEXT & ~filters.COMMAND,
             menu_route
         )
     )
