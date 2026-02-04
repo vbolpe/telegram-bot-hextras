@@ -42,7 +42,7 @@ async def legajo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
  #Carga el nombre y valida
 async def nombre(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    valida = update.massege.text.strip()
+    valida = update.message.text.strip()
 
     patron = r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
 
