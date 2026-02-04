@@ -2,7 +2,7 @@ from telegram import (Update, ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import (ConversationHandler, MessageHandler, CommandHandler, ContextTypes, filters)
 import re
 from datetime import datetime
-from database.db import user_exists, get_clientes, save_hora_extra
+from database.db import user_exists, get_clientes, overtime_works
 
 #Estados de la conversacion 
 REGISTER_FECHA =  1
@@ -145,7 +145,7 @@ async def client(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data["cliente"] = texto
 
-    save_hora_extra(
+    overtime_works(
         telegram_id=update.effective_user.id,
         fecha=context.user_data["fecha"],
         hora_inicio=context.user_data["hora_inicio"],
