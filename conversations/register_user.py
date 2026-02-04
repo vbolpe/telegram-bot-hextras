@@ -17,7 +17,7 @@ async def start_register(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("👋 Ya estás registrado.")
         return ConversationHandler.END
     
-    await update.massage.reply_text(
+    await update.message.reply_text(
         "👋 Bienvenido.\nVamos a crear tu usuario.\n\nIngresá tu legajo:"
     )
     return REGISTER_LEGAJO
@@ -61,7 +61,7 @@ async def nombre(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return REGISTER_NOMBRE
     
     context.user_data["nombre"] = valida
-    await update.massage.reply_text("Área: ")
+    await update.message.reply_text("Área: ")
     return REGISTER_AREA
 
 async def area(update: Update,context: ContextTypes.DEFAULT_TYPE):
@@ -76,7 +76,7 @@ async def area(update: Update,context: ContextTypes.DEFAULT_TYPE):
     context.user_data["area"] = valida
     await update.message.reply_text(
         "Jornada laboral:\n"
-        "EJ: Lunes a Viernes 12:00 a 13:00"
+        "EJ: Lunesr a Viernes 12:00 a 13:00"
     )
     return REGISTER_JORNADA
 
