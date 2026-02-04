@@ -1,24 +1,23 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from database.db import user_exists
-from handlers.menu import main_menu
+from menu import main_menu
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    welcome_text = ""
-    if not user_exists(user_id):
 
-        update.message.text = "__REGISTER__"
-        welcome_text = (
+    if not user_exists(user_id):
+        await update.message.reply_text(
             "¡Hola! 👋 Bienvenido al bot de gestión de horas extra.\n\n"
-            "Vamos a crear tu usuario para empezar a cargar tus horas:\n"
-            "Tene a mano tu numero de legajo.\n Usá /start"
+            "Vamos a crear tu usuario para empezar a cargar tus horas.\n"
+            "Tené a mano tu número de legajo.\n\n"
+            "Usá el menú para continuar 👇",
+            reply_markup=main_menu()
         )
-        return await context.application.process_update(update)
-    
-    welcome_text = (
+        return
+
+    await update.message.reply_text(
         "¡Hola! 👋 Bienvenido al bot de gestión de horas extra.\n\n"
-        "Seleccioná una opción:\n"
-        
+        "Seleccioná una opción 👇",
+        reply_markup=main_menu()
     )
-    await update.message.reply_text(welcome_text, reply_matkup=main_menu())

@@ -76,7 +76,7 @@ async def area(update: Update,context: ContextTypes.DEFAULT_TYPE):
     context.user_data["area"] = valida
     await update.message.reply_text(
         "Jornada laboral:\n"
-        "EJ: Lunesr a Viernes 12:00 a 13:00"
+        "EJ: Lunes a Viernes09:00 a 13:00"
     )
     return REGISTER_JORNADA
 

@@ -1,5 +1,6 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
+from menu import main_menu
 
 
 async def menu_route(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -39,4 +40,7 @@ async def menu_route(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return ConversationHandler.END
     
-    return
+    await update.message.reply_text(
+        "No entendí el mensaje. Usá el menú ",
+        reply_markup=main_menu()
+    )

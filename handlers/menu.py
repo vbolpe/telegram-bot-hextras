@@ -1,4 +1,4 @@
-from telegram import replyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup
 
 def main_menu():
     keyboard=[
@@ -8,7 +8,7 @@ def main_menu():
         ["Cancelar"]
     ]
 
-    return replyKeyboardMarkup(
+    return ReplyKeyboardMarkup(
         keyboard,
         resize_keyboard=True,
         one_time_keyboard=False

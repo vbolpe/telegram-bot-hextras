@@ -11,7 +11,7 @@ from handlers.menu_router import menu_route
 from conversations.newh_conv import register_handler_nh
 from conversations.register_user import register_handler
 from conversations.csv_conv import csv_handler
-
+from handlers.start import start_command
 
 # load environment variables
 load_dotenv()
@@ -29,6 +29,7 @@ def main():
     app.add_handler(register_handler)
     app.add_handler(register_handler_nh)
     app.add_handler(csv_handler)
+    app.add_handler(CommandHandler("start", start_command))
     app.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
@@ -45,10 +46,6 @@ def main():
             "No entendi el mensaje.\n"
             "Usá /help para ver los comandos disponibles."
         )
-    app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, unknown_text)
-    )
-
     app.run_polling()
 
 if __name__ == "__main__":
