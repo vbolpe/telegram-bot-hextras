@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from database.db import user_exists
-from menu import main_menu
+from handlers.menu import main_menu
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
