@@ -8,8 +8,8 @@ from database.db import init_db
 from handlers.help import help_command
 # from handlers.cancel import cancel
 from handlers.menu_router import menu_route
-from conversations.newh_conv import start_hora
-from conversations.register_user import start_register
+from conversations.newh_conv import register_handler_nh
+from conversations.register_user import register_handler
 from conversations.csv_conv import csv_handler
 
 
@@ -26,8 +26,8 @@ def main():
 
     app = ApplicationBuilder().token(TOKEN).build()
 
-    app.add_handler(start_register)
-    app.add_handler(start_hora)
+    app.add_handler(register_handler)
+    app.add_handler(register_handler_nh)
     app.add_handler(csv_handler)
     app.add_handler(
         MessageHandler(

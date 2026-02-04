@@ -176,7 +176,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     return ConversationHandler.END
 
-register_handler = ConversationHandler(
+register_handler_nh = ConversationHandler(
     entry_points = [CommandHandler("horaextra", start_hora)],
     states={
       REGISTER_FECHA: [MessageHandler(filters.TEXT & ~filters.COMMAND, fecha)],
