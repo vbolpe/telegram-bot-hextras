@@ -1,6 +1,6 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
-from menu import main_menu
+from handlers.menu import main_menu
 
 
 async def menu_route(update: Update, context: ContextTypes.DEFAULT_TYPE):
