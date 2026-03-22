@@ -26,7 +26,6 @@ async def start_register(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def legajo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     valida = update.message.text.strip()
 
-    #valido si es un numero entero
     if not valida.isdigit():
         await update.message.reply_text(
             "El legajo debe ser un número entero.\n"
@@ -34,16 +33,13 @@ async def legajo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return REGISTER_LEGAJO
 
-
-    context.user_data["legajo"] = update.message.text
+    context.user_data["legajo"] = valida
     await update.message.reply_text("Nombre y apellido: ")
     return REGISTER_NOMBRE
 
-
- #Carga el nombre y valida
+# Carga el nombre y valida
 async def nombre(update: Update, context: ContextTypes.DEFAULT_TYPE):
     valida = update.message.text.strip()
-
     patron = r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
 
     if not re.match(patron, valida):
@@ -56,7 +52,6 @@ async def nombre(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(valida.split()) < 2:
         await update.message.reply_text(
             "Ingresá nombre y apellido. \n"
-            "NICOLAS DEJA DE TRATAR DE ROMPER LA DB LRCCDCDTH"
         )
         return REGISTER_NOMBRE
     
@@ -73,10 +68,11 @@ async def area(update: Update,context: ContextTypes.DEFAULT_TYPE):
             "EJ: Soporte "
         )
         return REGISTER_AREA
+    
     context.user_data["area"] = valida
     await update.message.reply_text(
         "Jornada laboral:\n"
-        "EJ: Lunes a Viernes09:00 a 13:00"
+        "EJ: Lunes a Viernes 09:00 a 13:00"
     )
     return REGISTER_JORNADA
 
@@ -100,7 +96,6 @@ async def jornada(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Formato inválido.\n"
             "Usá el formato: \n"
             "Lunes a Viernes 12:00 a 18:00"
-            "Te cague puto"
         )
         return REGISTER_JORNADA
     
@@ -122,12 +117,20 @@ async def jornada(update: Update, context: ContextTypes.DEFAULT_TYPE):
         area=context.user_data["area"],
         jornada=context.user_data["jornada"]
     )
+
+    context.user_data.clear()
     await update.message.reply_text(" Registro completado.")
     return ConversationHandler.END
 
 
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
+    await update.message.reply_text("Carga cancelada.")
+    return ConversationHandler.END
+
+# Entry point es /registrar 
 register_handler = ConversationHandler(
-    entry_points = [CommandHandler("start", start_register)],
+    entry_points = [CommandHandler("registrar", start_register)],
     states={
       REGISTER_LEGAJO: [MessageHandler(filters.TEXT & ~filters.COMMAND, legajo)],
       REGISTER_NOMBRE: [MessageHandler(filters.TEXT & ~filters.COMMAND, nombre)],
@@ -135,5 +138,5 @@ register_handler = ConversationHandler(
       REGISTER_JORNADA: [MessageHandler(filters.TEXT & ~filters.COMMAND, jornada)],
   
     },
-    fallbacks=[],
+    fallbacks=[CommandHandler("cancel", cancel)],
 )

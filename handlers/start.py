@@ -12,7 +12,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Vamos a crear tu usuario para empezar a cargar tus horas.\n"
             "Tené a mano tu número de legajo.\n\n"
             "Usá el menú para continuar 👇",
-            reply_markup=main_menu()
         )
         return
 
