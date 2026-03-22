@@ -28,7 +28,7 @@ async def mes_csv(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text.strip()
 
     try:
-        fecha = datetime.strptime(texto, "%m%Y")
+        fecha = datetime.strptime(texto, "%m/%Y")
     except ValueError:
         await update.message.reply_text(
             "Formato inválido.\nUsá MM/YYYY"
@@ -45,7 +45,7 @@ async def mes_csv(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "No se relizaron horas extras en ese mes."
         )
-        return CommandHandler.END
+        return ConversationHandler.END
     
     fechas = sorted(set(r[0] for r in registros))
 
@@ -60,7 +60,7 @@ async def mes_csv(update: Update, context: ContextTypes.DEFAULT_TYPE):
     filename = f"horas_extras_{month:02d}_{year}.csv"
     filepath = f"/tmp/{filename}"
 
-    with open(filepath, mode="w", newline ="", encoding="uft-8") as file:
+    with open(filepath, mode="w", newline ="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow([
             "Fecha", "Hora Inicio", "Hora Fin", "Descripción", "Ticket", "Cliente"
