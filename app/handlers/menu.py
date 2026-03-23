@@ -4,6 +4,7 @@ def main_menu():
     keyboard=[
         ["Cargar hora extra"],
         ["Descargar CSV"],
+        ["Cargar cliente"],
         ["Ayuda"],
         ["Cancelar"]
     ]

@@ -9,7 +9,6 @@ def get_connection():
 
 def init_db():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-
     conn = get_connection()
     cur = conn.cursor()
 
@@ -50,29 +49,36 @@ def init_db():
     conn.commit()
     conn.close()
 
-def user_exists(telegram_id: int) -> str:
+# ── Usuarios ──────────────────────────────────────────────────────────────────
+
+def user_exists(telegram_id: int) -> bool:
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute(
-        "SELECT 1 FROM users WHERE telegram_id = ?",
-        (telegram_id,)
-    )
+    cur.execute("SELECT 1 FROM users WHERE telegram_id = ?",(telegram_id,))
     exists = cur.fetchone() is not None
     conn.close()
     return exists
 
-def user_name(telegram_id: int) -> bool:
+def get_user_by_telegram_id(telegram_id: int) -> dict | None:
     conn = get_connection()
-    cur = conn.cursor()
+    cur  = conn.cursor()
     cur.execute(
-        "SELECT nombre FROM users WHERE telegram_id = ?",
+        "SELECT legajo, nombre, area, jornada FROM users WHERE telegram_id = ?",
         (telegram_id,)
     )
     row = cur.fetchone()
     conn.close()
-    if row:
-        return row[0]
-    return None
+    if not row:
+        return None
+    return {"legajo": row[0], "nombre": row[1], "area": row[2], "jornada": row[3]}
+
+def user_name(telegram_id: int) -> str | None:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT nombre FROM users WHERE telegram_id = ?",(telegram_id,))
+    row = cur.fetchone()
+    conn.close()
+    return row[0] if row else None
 
 def create_user(telegram_id, legajo, nombre, area, jornada):
     conn = get_connection()
@@ -84,61 +90,61 @@ def create_user(telegram_id, legajo, nombre, area, jornada):
     conn.commit()
     conn.close()
 
-def overtime_works(telegram_id: int, fecha: str, hora_inicio: str, hora_fin: str,
-                   descripcion: str, ticket: str, cliente: str):
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO overtime (telegram_id, fecha, hora_inicio, hora_fin,
-                              descripcion, ticket, cliente)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (telegram_id, fecha, hora_inicio, hora_fin,
-          descripcion, ticket, cliente))
-    conn.commit()
-    conn.close()
+# ── Clientes ──────────────────────────────────────────────────────────────────
 
-def workend(telegram_id: int, mes: str):
+def get_clientes() -> list[str]:
     conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT fecha FROM overtime
-        WHERE telegram_id = ? AND fecha = ?
-        ORDER BY id DESC LIMIT 30
-    """, (telegram_id, mes))
-    result = cur.fetchone()
-    conn.close()
-    return result is not None and result[0] is not None
-
-def get_clientes():
-    conn = get_connection()
-    cur = conn.cursor()
-
+    cur  = conn.cursor()
     cur.execute("SELECT nombre FROM clientes ORDER BY nombre")
     rows = cur.fetchall()
-
     conn.close()
     return [row[0] for row in rows]
 
-def get_overtime_by_moth(telegram_id: int, year: int, month: int):
+def client_exists(client: str) -> bool:
     conn = get_connection()
     cur = conn.cursor()
+    cur.execute("SELECT 1 FROM clientes WHERE client = ?",(client,))
+    exists = cur.fetchone() is not None
+    conn.close()
+    return exists
 
+def create_client(nombre):
+    conn = get_connection()
+    cur = conn.cursor()
     cur.execute("""
-                
-        SELECT fecha, hora_inicio, hora_fin, description, ticket, cliente FROM overtime WHERE telegram_id = ?
-        
-        """, (telegram_id,))
-    
-    rows = cur.fetchall()
+        INSERT INTO clientes (nombre)
+        VALUES (?)
+    """, (nombre))
+    conn.commit()
     conn.close()
 
-    resultados = []
+# ── Proyectos ─────────────────────────────────────────────────────────────────
 
-    for row in rows:
-        fecha_str = row[0]
-        fecha = datetime.strptime(fecha_str, "%d%m%Y")
+# ── Horas extra ───────────────────────────────────────────────────────────────
 
-        if fecha.year == year and fecha.month == month:
-            resultados.append(row)
+def overtime_works(telegram_id: int, fecha: str, hora_inicio: str, hora_fin: str,
+                   descripcion: str, ticket: str, cliente: str, proyecto: str = ""):
+    conn = get_connection()
+    cur  = conn.cursor()
+    cur.execute("""
+        INSERT INTO overtime
+            (telegram_id, fecha, hora_inicio, hora_fin, descripcion, ticket, cliente, proyecto)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (telegram_id, fecha, hora_inicio, hora_fin, descripcion, ticket, cliente, proyecto))
+    conn.commit()
+    conn.close()
 
-    return resultados
+def get_overtime_by_moth(telegram_id: int, year: int, month: int) -> list[tuple]:
+    conn = get_connection()
+    cur  = conn.cursor()
+    cur.execute("""
+        SELECT fecha, hora_inicio, hora_fin, descripcion, ticket, cliente, proyecto
+        FROM overtime
+        WHERE telegram_id = ?
+          AND substr(fecha, 7, 4) = ?   -- año  (DD/MM/YYYY)
+          AND substr(fecha, 4, 2) = ?   -- mes
+        ORDER BY fecha
+    """, (telegram_id, str(year), f"{month:02d}"))
+    rows = cur.fetchall()
+    conn.close()
+    return rows

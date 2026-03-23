@@ -3,6 +3,7 @@ from telegram.ext import ContextTypes, ConversationHandler
 from handlers.menu import main_menu
 from conversations.newh_conv import start_hora
 from conversations.csv_conv import start_csv
+from conversations.register_client import start_register_client
 
 async def menu_route(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
@@ -12,7 +13,10 @@ async def menu_route(update: Update, context: ContextTypes.DEFAULT_TYPE):
  
     if text == "Descargar CSV":
         return await start_csv(update, context)
- 
+    
+    if text == "Cargar cliente":
+        return await start_register_client(update, context)
+    
     if text == "Ayuda":
         await update.message.reply_text(
             "Usá el menú para navegar o /help ."
