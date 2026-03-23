@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ConversationHandler, MessageHandler, CommandHandler, ContextTypes, filters
 from datetime import datetime
 from openpyxl import Workbook
-from openpyxl import Font, PatternFill, Alignment, Border, Side
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 import os
 
 from database.db import user_exists, get_overtime_by_moth, get_user_by_telegram_id
