@@ -34,6 +34,7 @@ def init_db():
             descripcion TEXT,
             ticket TEXT,
             cliente TEXT,
+            proyecto TEXT,
             FOREIGN KEY (telegram_id) REFERENCES users (telegram_id)
         )
     """)
@@ -103,7 +104,7 @@ def get_clientes() -> list[str]:
 def client_exists(client: str) -> bool:
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT 1 FROM clientes WHERE client = ?",(client,))
+    cur.execute("SELECT 1 FROM clientes WHERE nombre = ?",(client,))
     exists = cur.fetchone() is not None
     conn.close()
     return exists
@@ -114,7 +115,7 @@ def create_client(nombre):
     cur.execute("""
         INSERT INTO clientes (nombre)
         VALUES (?)
-    """, (nombre))
+    """, (nombre,))
     conn.commit()
     conn.close()
 

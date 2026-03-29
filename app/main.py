@@ -11,6 +11,7 @@ from handlers.menu_router import menu_route
 from conversations.newh_conv import register_handler_nh
 from conversations.register_user import register_handler
 from conversations.csv_conv import csv_handler
+from conversations.register_client import register_handler_cl
 from handlers.start import start_command
 
 
@@ -36,6 +37,7 @@ def main():
 
     app.add_handler(register_handler)    # /registrar
     app.add_handler(register_handler_nh) # /horaextra
+    app.add_handler(register_handler_cl) # /client
     app.add_handler(csv_handler)         # /csv 
 
     # Comandos simples
